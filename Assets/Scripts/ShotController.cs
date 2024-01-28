@@ -15,7 +15,6 @@ public class ShotController : MonoBehaviour
     private GameObject weapon;
     [SerializeField]
     private GameObject pr;
-    private bool hasFired = false;
     void Start()
     {
 
@@ -23,14 +22,10 @@ public class ShotController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) ||Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetMouseButtonDown(0) ||Input.GetMouseButton(0))
         {
             ShootRay();
-            hasFired = true;
-        } else
-        {
-            hasFired = false;
-        }
+        } 
 
     }
 
@@ -58,7 +53,7 @@ public class ShotController : MonoBehaviour
             Debug.Log("Objeto golpeado: " + hit.collider.gameObject.name);
             Debug.DrawLine(ray.origin, hit.point, Color.red);
 
-
+            /**
             if (!hasFired)
             {
                 GameObject bulletShell = Instantiate(pr, weapon.transform.position, Quaternion.identity);
@@ -68,7 +63,7 @@ public class ShotController : MonoBehaviour
                 {
                     bulletRigidbody.AddForce(Vector3.up * 2, ForceMode.Impulse);
                 }
-            }
+            }*/
         }
         else
         {
