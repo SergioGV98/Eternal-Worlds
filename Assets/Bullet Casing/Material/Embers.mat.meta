@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 84f79181191d7cc408745c914b8e3671
+timeCreated: 1471532950
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 120111
+  packageName: VFX Bullet Casing
+  packageVersion: 2.0
+  assetPath: Assets/Bullet Casing/Material/Embers.mat
+  uploadId: 324426

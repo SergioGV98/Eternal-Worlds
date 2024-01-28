@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 17a44cf2e19b14f45b11237f3c2b3bdc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 120111
+  packageName: VFX Bullet Casing
+  packageVersion: 2.0
+  assetPath: Assets/Bullet Casing/Prefabs/Bullets/556x45.prefab
+  uploadId: 324426
