@@ -110,6 +110,7 @@ public class CameraHandler : MonoBehaviour
 
         if (Physics.SphereCast(cameraPivotTransform.position, cameraSphereRadius, direction, out hit, Mathf.Abs(targetPosition), ignoreLayers))
         {
+            Debug.DrawLine(cameraPivotTransform.position, hit.point, Color.red);
             float dis = Vector3.Distance(cameraPivotTransform.position, hit.point);
             targetPosition = -(dis - cameraCollisionOffSet);
         }
