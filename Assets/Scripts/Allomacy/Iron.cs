@@ -1,43 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using System.Collections.Generic;
-using UnityEngine;
-
 public class Iron : MonoBehaviour
 {
-    public static Iron Instance { get; private set; }
-
+    public GameObject[] jumpObjects;
     public float moveSpeed = 3f;
+
+    // Ajusta este offset para representar la posición del pecho
+    public Vector3 chestOffset = new Vector3(0f, 1f, 0f);
+
+    private void Update()
+    {
+        jumpObjects = GameObject.FindGameObjectsWithTag("Iron");
+
+        // Obtener el punto del pecho
+        Vector3 chestPoint = transform.position + chestOffset;
+
+        foreach (GameObject go in jumpObjects)
+        {
+            // Dibujar línea azul desde el pecho hasta el GameObject
+            Debug.DrawLine(chestPoint, go.transform.position, Color.blue);
+        }
+    }
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+
     }
 
-    public void Burn(Transform playerTransform)
+    public void Burn()
     {
-        RaycastHit hit;
-        if (Physics.Raycast(playerTransform.position, playerTransform.forward, out hit, 3f, LayerMask.GetMask("Iron")))
-        {
-            Debug.DrawLine(playerTransform.position, hit.point, Color.blue);
-            MovePlayerTowardsIron(playerTransform, hit.collider.gameObject);
-        }
+
     }
 
-    void MovePlayerTowardsIron(Transform playerTransform, GameObject ironObject)
+    void MovePlayerTowardsIron()
     {
-        Vector3 directionToIron = (ironObject.transform.position - playerTransform.position).normalized;
-        Vector3 newPosition = playerTransform.position + directionToIron * 2f;
 
-        playerTransform.position = Vector3.MoveTowards(playerTransform.position, newPosition, Time.deltaTime * moveSpeed);
     }
 }
