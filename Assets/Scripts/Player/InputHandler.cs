@@ -15,40 +15,14 @@ public class InputHandler : MonoBehaviour
     public bool rollFlag;
     public bool sprintFlag;
     public float rollInputTimer;
-    public bool isInteracting;
 
     // Acciones del jugador
     PlayerControls inputActions;
-
-    // Manejador de la cámara
-    CameraHandler cameraHandler;
 
     // Entradas de movimiento y rotación de la cámara en formato Vector2
     Vector2 movementInput;
     Vector2 cameraInput;
 
-    // Método llamado al despertar
-    private void Awake()
-    {
-        // Obtener la instancia única del manejador de la cámara
-        cameraHandler = CameraHandler.singleton;
-        // Bloqueo del raton en el centro del monitor
-        Cursor.lockState = CursorLockMode.Locked;
-    }
-
-    // Método llamado en cada fixed update
-    private void FixedUpdate()
-    {
-        float delta = Time.fixedDeltaTime;
-
-        // Verificar si el manejador de la cámara está presente
-        if (cameraHandler != null)
-        {
-            // Seguir al objetivo y manejar la rotación de la cámara
-            cameraHandler.FollowTarget(delta);
-            cameraHandler.HandleCameraRotation(delta, mouseX, mouseY);
-        }
-    }
 
     // Método llamado al habilitar este componente
     public void OnEnable()

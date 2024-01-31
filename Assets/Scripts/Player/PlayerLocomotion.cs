@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerLocomotion : MonoBehaviour
 {
+    PlayerManager playerManager;
     // Objeto de la cámara
     Transform cameraObject;
 
@@ -27,16 +28,15 @@ public class PlayerLocomotion : MonoBehaviour
     // Cámara normal del jugador
     public GameObject normalCamera;
 
-    [Header("Stats")]
+    [Header("Movement Stats")]
     [SerializeField] float movementSpeed = 5;
     [SerializeField] float sprintSpeed = 7;
     [SerializeField] float rotationSpeed = 10;
 
-    public bool isSprinting;
-
     // Método llamado al inicio
     void Start()
     {
+        playerManager = GetComponent<PlayerManager>();  
         // Obtener el Rigidbody y los componentes de InputHandler y AnimatorHandler
         rigidbody = GetComponent<Rigidbody>();
         inputHandler = GetComponent<InputHandler>();
@@ -50,18 +50,6 @@ public class PlayerLocomotion : MonoBehaviour
 
         // Iniciar el AnimatorHandler
         animatorHandler.Start();
-    }
-
-    // Método llamado en cada frame
-    public void Update()
-    {
-        float delta = Time.deltaTime;
-
-        // Procesar la entrada del jugador
-        isSprinting = inputHandler.b_Input;
-        inputHandler.TickInput(delta);
-        HandleMovement(delta);
-        HandleRollingAndSprinting(delta);
     }
 
 
@@ -119,7 +107,7 @@ public class PlayerLocomotion : MonoBehaviour
         if(inputHandler.sprintFlag)
         {
             speed = sprintSpeed;
-            isSprinting = true;
+            playerManager.isSprinting = true;
             moveDirection *= speed;
         }
         else
@@ -132,7 +120,7 @@ public class PlayerLocomotion : MonoBehaviour
         rigidbody.velocity = projectedVelocity;
 
         // Actualizar los valores del Animator
-        animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0, isSprinting);
+        animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0, playerManager.isSprinting);
 
         // Manejar la rotación del jugador si es permitida
         if (animatorHandler.canRotate)

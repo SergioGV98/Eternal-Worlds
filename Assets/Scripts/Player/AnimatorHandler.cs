@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class AnimatorHandler : MonoBehaviour
 {
+    PlayerManager playerManager;
     // Referencia al componente Animator
     public Animator anim;
-    public InputHandler inputHandler;
-    public PlayerLocomotion playerLocomotion;
+    InputHandler inputHandler;
+    PlayerLocomotion playerLocomotion;
 
     // Identificadores hash para las variables en el Animator
     int vertical;
@@ -116,7 +117,7 @@ public class AnimatorHandler : MonoBehaviour
 
     private void OnAnimatorMove()
     {
-        if(inputHandler.isInteracting == false)
+        if (playerManager != null && playerManager.isInteracting == false)
         {
             return;
         }
