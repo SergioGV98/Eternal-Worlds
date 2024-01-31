@@ -1,30 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using UnityEngine.InputSystem;
 
-public class AllomacyHandler : MonoBehaviour
+
+public class AllomancyHandler : MonoBehaviour
 {
-    private Iron iron;
-    // Start is called before the first frame update
+    private PlayerControls inputActions;
+    public Transform playerTransform;
+    //public Iron iron;
+
     void Start()
     {
-        
+        inputActions = new PlayerControls();
     }
 
-    // Update is called once per frame
+    public void OnEnable()
+    {
+        if (inputActions == null)
+        {
+            inputActions = new PlayerControls();
+            inputActions.PlayerActions.Iron.started += ctx => ActivateMetal(); // Usar el evento 'started' en lugar de 'performed'
+            inputActions.Enable();
+        }
+    }
+
     void Update()
     {
-        
+       
     }
 
     public void ActivateMetal()
     {
-
+        // Lógica de activación del metal
+        Debug.Log("Metal activado");
     }
 
     public void DeactivateMetal()
     {
-        
+        // Lógica de desactivación del metal
+        Debug.Log("Metal desactivado");
     }
 }
