@@ -29,7 +29,10 @@ public class PlayerLocomotion : MonoBehaviour
 
     [Header("Stats")]
     [SerializeField] float movementSpeed = 5;
+    [SerializeField] float sprintSpeed = 7;
     [SerializeField] float rotationSpeed = 10;
+
+    public bool isSprinting;
 
     // Método llamado al inicio
     void Start()
@@ -55,6 +58,7 @@ public class PlayerLocomotion : MonoBehaviour
         float delta = Time.deltaTime;
 
         // Procesar la entrada del jugador
+        isSprinting = inputHandler.b_Input;
         inputHandler.TickInput(delta);
         HandleMovement(delta);
         HandleRollingAndSprinting(delta);
@@ -100,6 +104,9 @@ public class PlayerLocomotion : MonoBehaviour
 
     public void HandleMovement(float delta)
     {
+        if (inputHandler.rollFlag)
+            return;
+
         // Calcular la dirección de movimiento del jugador en función de la cámara
         moveDirection = cameraObject.forward * inputHandler.vertical;
         moveDirection += cameraObject.right * inputHandler.horizontal;
@@ -108,14 +115,24 @@ public class PlayerLocomotion : MonoBehaviour
 
         // Calcular la velocidad de movimiento del jugador
         float speed = movementSpeed;
-        moveDirection *= speed;
+
+        if(inputHandler.sprintFlag)
+        {
+            speed = sprintSpeed;
+            isSprinting = true;
+            moveDirection *= speed;
+        }
+        else
+        {
+            moveDirection *= speed;
+        }
 
         // Proyectar la velocidad en el plano horizontal
         Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
         rigidbody.velocity = projectedVelocity;
 
         // Actualizar los valores del Animator
-        animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0);
+        animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0, isSprinting);
 
         // Manejar la rotación del jugador si es permitida
         if (animatorHandler.canRotate)

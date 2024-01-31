@@ -30,7 +30,7 @@ public class AnimatorHandler : MonoBehaviour
     }
 
     // Método para actualizar los valores del Animator basados en el movimiento vertical y horizontal
-    public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement)
+    public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement, bool isSprinting)
     {
         #region Vertical
         float v = 0;
@@ -83,6 +83,12 @@ public class AnimatorHandler : MonoBehaviour
             h = 0;
         }
         #endregion
+
+        if(isSprinting)
+        {
+            v = 2;
+            h = horizontalMovement;
+        }
 
         // Actualizar los valores en el Animator con suavizado
         anim.SetFloat(vertical, v, 0.1f, Time.deltaTime);
