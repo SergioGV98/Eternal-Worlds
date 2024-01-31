@@ -56,30 +56,10 @@ public class PlayerLocomotion : MonoBehaviour
 
         // Procesar la entrada del jugador
         inputHandler.TickInput(delta);
-
-        // Calcular la dirección de movimiento del jugador en función de la cámara
-        moveDirection = cameraObject.forward * inputHandler.vertical;
-        moveDirection += cameraObject.right * inputHandler.horizontal;
-        moveDirection.Normalize();
-        moveDirection.y = 0;
-
-        // Calcular la velocidad de movimiento del jugador
-        float speed = movementSpeed;
-        moveDirection *= speed;
-
-        // Proyectar la velocidad en el plano horizontal
-        Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
-        rigidbody.velocity = projectedVelocity;
-
-        // Actualizar los valores del Animator
-        animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0);
-
-        // Manejar la rotación del jugador si es permitida
-        if (animatorHandler.canRotate)
-        {
-            HandleRotation(delta);
-        }
+        HandleMovement(delta);
+        HandleRollingAndSprinting(delta);
     }
+
 
     #region Movement
     // Vector normal al plano horizontal
@@ -116,6 +96,52 @@ public class PlayerLocomotion : MonoBehaviour
 
         // Aplicar la rotación al jugador
         myTransform.rotation = targetRotation;
+    }
+
+    public void HandleMovement(float delta)
+    {
+        // Calcular la dirección de movimiento del jugador en función de la cámara
+        moveDirection = cameraObject.forward * inputHandler.vertical;
+        moveDirection += cameraObject.right * inputHandler.horizontal;
+        moveDirection.Normalize();
+        moveDirection.y = 0;
+
+        // Calcular la velocidad de movimiento del jugador
+        float speed = movementSpeed;
+        moveDirection *= speed;
+
+        // Proyectar la velocidad en el plano horizontal
+        Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
+        rigidbody.velocity = projectedVelocity;
+
+        // Actualizar los valores del Animator
+        animatorHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0);
+
+        // Manejar la rotación del jugador si es permitida
+        if (animatorHandler.canRotate)
+        {
+            HandleRotation(delta);
+        }
+    }
+
+    public void HandleRollingAndSprinting(float delta)
+    {
+        if (animatorHandler.anim.GetBool("isInteracting"))
+            return;
+
+        if (inputHandler.rollFlag)
+        {
+            moveDirection = cameraObject.forward * inputHandler.vertical;
+            moveDirection += cameraObject.right * inputHandler.horizontal;
+
+            if(inputHandler.moveAmount > 0)
+            {
+                animatorHandler.PlayTargetAnimation("Rolling", true);
+                moveDirection.y = 0;
+                Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
+                myTransform.rotation = rollRotation;
+            } 
+        }
     }
 
     #endregion

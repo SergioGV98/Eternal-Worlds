@@ -6,6 +6,8 @@ public class AnimatorHandler : MonoBehaviour
 {
     // Referencia al componente Animator
     public Animator anim;
+    public InputHandler inputHandler;
+    public PlayerLocomotion playerLocomotion;
 
     // Identificadores hash para las variables en el Animator
     int vertical;
@@ -14,12 +16,14 @@ public class AnimatorHandler : MonoBehaviour
     // Indica si se puede rotar o no
     public bool canRotate;
 
+
     // Método llamado al iniciar
     public void Start()
     {
         // Obtener el componente Animator asociado al objeto
         anim = GetComponent<Animator>();
-
+        inputHandler = GetComponent<InputHandler>();
+        playerLocomotion = GetComponent<PlayerLocomotion>();
         // Asignar identificadores hash para las variables del Animator
         vertical = Animator.StringToHash("Vertical");
         horizontal = Animator.StringToHash("Horizontal");
@@ -85,6 +89,13 @@ public class AnimatorHandler : MonoBehaviour
         anim.SetFloat(horizontal, h, 0.1f, Time.deltaTime);
     }
 
+    public void PlayTargetAnimation(string targetAnim, bool isInteracting)
+    {
+        anim.applyRootMotion = isInteracting;
+        anim.SetBool("isInteracting", isInteracting);
+        anim.CrossFade(targetAnim, 0.2f);
+    }
+
     // Método para permitir la rotación
     public void CanRotate()
     {
@@ -95,5 +106,20 @@ public class AnimatorHandler : MonoBehaviour
     public void StopRotation()
     {
         canRotate = false;
+    }
+
+    private void OnAnimatorMove()
+    {
+        if(inputHandler.isInteracting == false)
+        {
+            return;
+        }
+
+        float delta = Time.deltaTime;
+        playerLocomotion.rigidbody.drag = 0;
+        Vector3 deltaPosition = anim.deltaPosition;
+        deltaPosition.y = 0;
+        Vector3 velocity = deltaPosition / delta;
+        playerLocomotion.rigidbody.velocity = velocity;
     }
 }

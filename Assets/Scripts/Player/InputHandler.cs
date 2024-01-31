@@ -11,6 +11,10 @@ public class InputHandler : MonoBehaviour
     public float mouseX;
     public float mouseY;
 
+    public bool b_Input;
+    public bool rollFlag;
+    public bool isInteracting;
+
     // Acciones del jugador
     PlayerControls inputActions;
 
@@ -71,6 +75,7 @@ public class InputHandler : MonoBehaviour
     {
         // Procesar la entrada de movimiento
         MoveInput(delta);
+        HandleRollInput(delta);
     }
 
     // Método para procesar la entrada de movimiento
@@ -82,5 +87,15 @@ public class InputHandler : MonoBehaviour
         moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
         mouseX = cameraInput.x;
         mouseY = cameraInput.y;
+    }
+
+    private void HandleRollInput(float delta)
+    {
+        b_Input = inputActions.PlayerActions.Roll.triggered;
+
+        if (b_Input)
+        {
+            rollFlag = true;
+        }
     }
 }
