@@ -94,10 +94,8 @@ public class AllomancyHandler : MonoBehaviour
                     iron.Burn();
                     break;
                 case AllomancyType.Steel:
-                    // Lógica para Steel (si es necesario)
                     break;
                 case AllomancyType.Pewter:
-                    // Lógica para Pewter (si es necesario)
                     break;
                 default:
                     Debug.LogError("Tipo de Allomancy no reconocido");

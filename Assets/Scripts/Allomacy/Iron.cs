@@ -98,8 +98,6 @@ public class Iron : MonoBehaviour
 
             transform.position += direction * Time.deltaTime * 10f;
             GetComponent<Rigidbody>().AddForce(direction * 10f, ForceMode.Impulse);
-
-            Debug.Log("Estoy quemando hierro");
         }
     }
 
