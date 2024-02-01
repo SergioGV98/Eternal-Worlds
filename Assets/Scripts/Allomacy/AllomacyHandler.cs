@@ -62,6 +62,7 @@ public class AllomancyHandler : MonoBehaviour
         iron.SetActive(currentIndex == (int)AllomancyType.Iron);
     }
 
+
     private void UpdateAllomancyImage()
     {
         if (allomancyTextures.TryGetValue(currentAllomancy, out Texture2D texture))

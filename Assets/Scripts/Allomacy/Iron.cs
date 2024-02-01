@@ -1,26 +1,22 @@
 using UnityEngine;
 
-using UnityEngine;
-
 public class Iron : MonoBehaviour
 {
     [Header("Jump Objects")]
     [SerializeField] private float minDist = 20f;
     [SerializeField] private Vector3 chestOffset = new Vector3(0f, 1f, 0f);
     [SerializeField] private Material lineMaterial;
-    [SerializeField] private Camera mainCamera; // Añade una referencia a la cámara aquí
+    [SerializeField] private Camera mainCamera;
 
     private bool isActive = false;
     private GameObject[] jumpObjects;
     private LineRenderer[] lineRenderers;
 
-    // Initialization of LineRenderers
     private void Start()
     {
         lineRenderers = new LineRenderer[0];
     }
 
-    // Iron behavior update
     private void Update()
     {
         if (!isActive) return;
@@ -29,13 +25,11 @@ public class Iron : MonoBehaviour
         UpdateLineRenderers();
     }
 
-    // Find objects with the "Iron" tag
     private void FindJumpObjects()
     {
         jumpObjects = GameObject.FindGameObjectsWithTag("Iron");
     }
 
-    // Update LineRenderers based on the found objects
     private void UpdateLineRenderers()
     {
         Vector3 chestPoint = transform.position + chestOffset;
@@ -60,7 +54,6 @@ public class Iron : MonoBehaviour
         }
     }
 
-    // Handle active LineRenderer
     private void HandleActiveLineRenderer(int index, Vector3 start, Vector3 end)
     {
         if (lineRenderers[index] == null)
@@ -72,7 +65,6 @@ public class Iron : MonoBehaviour
         lineRenderers[index].SetPosition(1, end);
     }
 
-    // Handle inactive LineRenderer
     private void HandleInactiveLineRenderer(int index)
     {
         if (lineRenderers[index] != null)
@@ -82,7 +74,6 @@ public class Iron : MonoBehaviour
         }
     }
 
-    // Create a new LineRenderer
     private LineRenderer CreateLineRenderer()
     {
         GameObject lineObject = new GameObject("LineRenderer");
@@ -93,19 +84,55 @@ public class Iron : MonoBehaviour
         return lineRenderer;
     }
 
-    // Burn method
     public void Burn()
     {
-        // Calcula la dirección desde la cámara hacia el objeto apuntado
-        Vector3 direction = mainCamera.transform.forward;
+        Ray ray = mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+        Vector3 cameraDirection = ray.direction;
 
-        // Aplica un impulso en la dirección calculada (ajusta la fuerza según sea necesario)
-        GetComponent<Rigidbody>().AddForce(direction * 10f, ForceMode.Impulse);
+        LineRenderer closestLine = FindClosestLineInDirection(cameraDirection);
 
-        Debug.Log("Estoy quemando hierro");
+        if (closestLine != null)
+        {
+            Vector3 lineCenter = (closestLine.GetPosition(0) + closestLine.GetPosition(1)) / 2f;
+            Vector3 direction = (lineCenter - (transform.position + chestOffset)).normalized;
+
+            transform.position += direction * Time.deltaTime * 10f;
+            GetComponent<Rigidbody>().AddForce(direction * 10f, ForceMode.Impulse);
+
+            Debug.Log("Estoy quemando hierro");
+        }
     }
 
-    // Activate or deactivate Iron behavior
+    private LineRenderer FindClosestLineInDirection(Vector3 direction)
+    {
+        Vector3 chestPoint = transform.position + chestOffset;
+        LineRenderer closestLine = null;
+        float closestDist = float.MaxValue;
+
+        for (int i = 0; i < lineRenderers.Length; i++)
+        {
+            if (lineRenderers[i] != null)
+            {
+                Vector3 lineCenter = (lineRenderers[i].GetPosition(0) + lineRenderers[i].GetPosition(1)) / 2f;
+                Vector3 lineDirection = (lineCenter - chestPoint).normalized;
+
+                float dotProduct = Vector3.Dot(lineDirection, direction);
+
+                if (dotProduct > 0.9f)
+                {
+                    float dist = Vector3.Distance(chestPoint, lineCenter);
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closestLine = lineRenderers[i];
+                    }
+                }
+            }
+        }
+
+        return closestLine;
+    }
+
     public void SetActive(bool active)
     {
         isActive = active;
@@ -116,7 +143,6 @@ public class Iron : MonoBehaviour
         }
     }
 
-    // Deactivate all LineRenderers
     private void DisableAllLines()
     {
         if (lineRenderers == null) return;
