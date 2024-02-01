@@ -147,6 +147,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeMetal"",
+                    ""type"": ""Button"",
+                    ""id"": ""b7bd9562-8cc3-47f4-a6cd-37f5691213c4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -171,6 +180,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Iron"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7fcdf9bc-a64e-46ae-8dcc-15b2660c5eda"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeMetal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +205,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_PlayerActions = asset.FindActionMap("PlayerActions", throwIfNotFound: true);
         m_PlayerActions_Roll = m_PlayerActions.FindAction("Roll", throwIfNotFound: true);
         m_PlayerActions_Iron = m_PlayerActions.FindAction("Iron", throwIfNotFound: true);
+        m_PlayerActions_ChangeMetal = m_PlayerActions.FindAction("ChangeMetal", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -302,12 +323,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IPlayerActionsActions> m_PlayerActionsActionsCallbackInterfaces = new List<IPlayerActionsActions>();
     private readonly InputAction m_PlayerActions_Roll;
     private readonly InputAction m_PlayerActions_Iron;
+    private readonly InputAction m_PlayerActions_ChangeMetal;
     public struct PlayerActionsActions
     {
         private @PlayerControls m_Wrapper;
         public PlayerActionsActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Roll => m_Wrapper.m_PlayerActions_Roll;
         public InputAction @Iron => m_Wrapper.m_PlayerActions_Iron;
+        public InputAction @ChangeMetal => m_Wrapper.m_PlayerActions_ChangeMetal;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActions; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -323,6 +346,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Iron.started += instance.OnIron;
             @Iron.performed += instance.OnIron;
             @Iron.canceled += instance.OnIron;
+            @ChangeMetal.started += instance.OnChangeMetal;
+            @ChangeMetal.performed += instance.OnChangeMetal;
+            @ChangeMetal.canceled += instance.OnChangeMetal;
         }
 
         private void UnregisterCallbacks(IPlayerActionsActions instance)
@@ -333,6 +359,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Iron.started -= instance.OnIron;
             @Iron.performed -= instance.OnIron;
             @Iron.canceled -= instance.OnIron;
+            @ChangeMetal.started -= instance.OnChangeMetal;
+            @ChangeMetal.performed -= instance.OnChangeMetal;
+            @ChangeMetal.canceled -= instance.OnChangeMetal;
         }
 
         public void RemoveCallbacks(IPlayerActionsActions instance)
@@ -359,5 +388,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnRoll(InputAction.CallbackContext context);
         void OnIron(InputAction.CallbackContext context);
+        void OnChangeMetal(InputAction.CallbackContext context);
     }
 }

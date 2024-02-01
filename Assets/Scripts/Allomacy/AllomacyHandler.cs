@@ -1,16 +1,42 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
+enum AllomancyType
+{
+    Iron,
+    Steel,
+    Pewter
+}
 
 public class AllomancyHandler : MonoBehaviour
 {
     private PlayerControls inputActions;
     public Transform playerTransform;
-    //public Iron iron;
+    private AllomancyType currentAllomancy = AllomancyType.Iron;
+    public RawImage allomancyImage;
+    public Texture2D ironTexture;
+    public Texture2D steelTexture;
+    public Texture2D pewterTexture;
+
+    private Iron iron;
+
+    private Dictionary<AllomancyType, Texture2D> allomancyTextures;
 
     void Start()
     {
         inputActions = new PlayerControls();
+        allomancyTextures = new Dictionary<AllomancyType, Texture2D>
+        {
+            { AllomancyType.Iron, ironTexture },
+            { AllomancyType.Steel, steelTexture },
+            { AllomancyType.Pewter, pewterTexture },
+        };
+
+        iron = GetComponent<Iron>();
+
+        UpdateAllomancyImage();
     }
 
     public void OnEnable()
@@ -18,25 +44,56 @@ public class AllomancyHandler : MonoBehaviour
         if (inputActions == null)
         {
             inputActions = new PlayerControls();
-            inputActions.PlayerActions.Iron.started += ctx => ActivateMetal(); // Usar el evento 'started' en lugar de 'performed'
+            inputActions.PlayerActions.Iron.started += ctx => BurnMetal();
+            // Boton de cambio de alomacia
+            inputActions.PlayerActions.ChangeMetal.started += ctx => ChangeAllomancy();
             inputActions.Enable();
         }
     }
 
-    void Update()
+    public void BurnMetal()
     {
-       
+        int currentIndex = (int)currentAllomancy;
+
+        if (currentIndex == (int)AllomancyType.Iron)
+        {
+            iron.SetActive(true);
+            Debug.Log("Metal activado: Iron");
+        }
+        else if (currentIndex == (int)AllomancyType.Steel)
+        {
+            iron.SetActive(false);
+            Debug.Log("Metal activado: Steel");
+        }
+        else if (currentIndex == (int)AllomancyType.Pewter)
+        {
+            iron.SetActive(false);
+            Debug.Log("Metal activado: Pewter");
+        }
     }
 
-    public void ActivateMetal()
+    private void UpdateAllomancyImage()
     {
-        // Lógica de activación del metal
-        Debug.Log("Metal activado");
+        if (allomancyTextures.ContainsKey(currentAllomancy))
+        {
+            allomancyImage.texture = allomancyTextures[currentAllomancy];
+        }
     }
 
-    public void DeactivateMetal()
+    private void ChangeAllomancy()
     {
-        // Lógica de desactivación del metal
-        Debug.Log("Metal desactivado");
+        // Obtiene el índice actual del enum
+        int currentIndex = (int)currentAllomancy;
+
+        // Incrementa el índice circularmente
+        currentIndex = (currentIndex + 1) % Enum.GetValues(typeof(AllomancyType)).Length;
+
+        // Asigna la nueva alomacia actual
+        currentAllomancy = (AllomancyType)currentIndex;
+
+        UpdateAllomancyImage();
+
+        // Muestra la alomacia actual por consola
+        Debug.Log("Alomacia actual: " + currentAllomancy);
     }
 }
