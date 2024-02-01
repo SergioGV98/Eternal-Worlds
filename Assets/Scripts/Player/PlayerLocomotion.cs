@@ -57,9 +57,6 @@ public class PlayerLocomotion : MonoBehaviour
     // Vector normal al plano horizontal
     Vector3 normalVector;
 
-    // Vector de posición objetivo
-    Vector3 targetPosition;
-
     // Método para manejar la rotación del jugador
     private void HandleRotation(float delta)
     {
@@ -147,6 +144,17 @@ public class PlayerLocomotion : MonoBehaviour
                 myTransform.rotation = rollRotation;
             } 
         }
+    }
+
+    public bool CheckGround(float delta)
+    {
+        RaycastHit hit;
+        Debug.DrawRay(myTransform.position, Vector3.down * 0.2f, Color.red);
+        if (Physics.Raycast(myTransform.position, Vector3.down, out hit, 0.2f))
+        {
+            return true;
+        }
+        return false;
     }
 
     #endregion

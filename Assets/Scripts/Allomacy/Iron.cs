@@ -96,7 +96,7 @@ public class Iron : MonoBehaviour
             Vector3 lineCenter = (closestLine.GetPosition(0) + closestLine.GetPosition(1)) / 2f;
             Vector3 direction = (lineCenter - (transform.position + chestOffset)).normalized;
 
-            transform.position += direction * Time.deltaTime * 10f;
+            transform.position += direction * Time.deltaTime * 5f;
             GetComponent<Rigidbody>().AddForce(direction * 10f, ForceMode.Impulse);
         }
     }

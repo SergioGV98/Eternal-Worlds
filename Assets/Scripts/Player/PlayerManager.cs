@@ -40,6 +40,7 @@ public class PlayerManager : MonoBehaviour
         inputHandler.TickInput(delta);
         playerLocomotion.HandleMovement(delta);
         playerLocomotion.HandleRollingAndSprinting(delta);
+        playerLocomotion.CheckGround(delta);
         
     }
 
