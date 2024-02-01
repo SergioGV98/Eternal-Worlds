@@ -48,6 +48,8 @@ GameObject:
   - component: {fileID: 5988355798758841825}
   - component: {fileID: 8260305142574987045}
   - component: {fileID: 4324335121264891537}
+  - component: {fileID: 2887936890938088503}
+  - component: {fileID: 8585881716904696129}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -157,8 +159,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 6827411321857316890}
-  inputHandler: {fileID: 5988355798758841825}
-  playerLocomotion: {fileID: 8260305142574987045}
   canRotate: 1
 --- !u!114 &5988355798758841825
 MonoBehaviour:
@@ -179,7 +179,8 @@ MonoBehaviour:
   mouseY: 0
   b_Input: 0
   rollFlag: 0
-  isInteracting: 0
+  sprintFlag: 0
+  rollInputTimer: 0
 --- !u!114 &8260305142574987045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -197,6 +198,7 @@ MonoBehaviour:
   rigidbody: {fileID: 0}
   normalCamera: {fileID: 0}
   movementSpeed: 5
+  sprintSpeed: 7
   rotationSpeed: 10
 --- !u!114 &4324335121264891537
 MonoBehaviour:
@@ -210,6 +212,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1342649f3867d5848846a456479e5e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInteracting: 0
+  isSprinting: 0
+--- !u!114 &2887936890938088503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221848549468707034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 062f9ca51f725164f96f98d7e52124c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTransform: {fileID: 603476543468257888}
+  allomancyImage: {fileID: 0}
+  ironTexture: {fileID: 2800000, guid: 6c308a04cf2a11445b592726b4283559, type: 3}
+  steelTexture: {fileID: 2800000, guid: 3c8e94f0b01518a4baf2b99b70454388, type: 3}
+  pewterTexture: {fileID: 2800000, guid: a447a38eacd2a2f49a521eb83f20d8ba, type: 3}
+--- !u!114 &8585881716904696129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221848549468707034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 600ed1a3f52b44e44bd5aec9a1697960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lineMaterial: {fileID: 2100000, guid: daf157b1619811344b35587d173c74e1, type: 2}
+  chestOffset: {x: 0, y: 1, z: 0}
 --- !u!1 &421414607482387987
 GameObject:
   m_ObjectHideFlags: 0
