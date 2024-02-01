@@ -1,69 +1,88 @@
 using UnityEngine;
 
+using UnityEngine;
+
 public class Iron : MonoBehaviour
 {
+    [Header("Jump Objects")]
+    [SerializeField] private float minDist = 20f;
+    [SerializeField] private Vector3 chestOffset = new Vector3(0f, 1f, 0f);
+    [SerializeField] private Material lineMaterial;
+    [SerializeField] private Camera mainCamera; // Añade una referencia a la cámara aquí
+
+    private bool isActive = false;
     private GameObject[] jumpObjects;
     private LineRenderer[] lineRenderers;
-    private float minDist = 20f;
-    [SerializeField] Material lineMaterial;
 
-    // Desplazamiento del punto de conexión al pecho del personaje
-    public Vector3 chestOffset = new Vector3(0f, 1f, 0f);
-
-    private bool isActive = false; // Variable para controlar la activación
-
-    // Inicialización de los LineRenderers
-    void Start()
+    // Initialization of LineRenderers
+    private void Start()
     {
         lineRenderers = new LineRenderer[0];
     }
 
-    // Actualización del comportamiento de Iron
-    void Update()
+    // Iron behavior update
+    private void Update()
     {
-        // Si no está activo, salir del método
         if (!isActive) return;
 
-        // Buscar objetos con la etiqueta "Iron"
+        FindJumpObjects();
+        UpdateLineRenderers();
+    }
+
+    // Find objects with the "Iron" tag
+    private void FindJumpObjects()
+    {
         jumpObjects = GameObject.FindGameObjectsWithTag("Iron");
+    }
+
+    // Update LineRenderers based on the found objects
+    private void UpdateLineRenderers()
+    {
         Vector3 chestPoint = transform.position + chestOffset;
 
-        // Ajustar el tamaño del array de LineRenderers según la cantidad de objetos encontrados
         if (lineRenderers.Length != jumpObjects.Length)
         {
             System.Array.Resize(ref lineRenderers, jumpObjects.Length);
         }
 
-        // Iterar sobre los objetos encontrados y actualizar los LineRenderers
         for (int i = 0; i < jumpObjects.Length; i++)
         {
             float dist = Vector3.Distance(transform.position, jumpObjects[i].transform.position);
 
             if (dist < minDist)
             {
-                // Crear un nuevo LineRenderer si no existe
-                if (lineRenderers[i] == null)
-                {
-                    lineRenderers[i] = CreateLineRenderer();
-                }
-
-                // Establecer los puntos de inicio y fin del LineRenderer
-                lineRenderers[i].SetPosition(0, chestPoint);
-                lineRenderers[i].SetPosition(1, jumpObjects[i].transform.position);
+                HandleActiveLineRenderer(i, chestPoint, jumpObjects[i].transform.position);
             }
             else
             {
-                // Destruir el LineRenderer si la distancia es mayor que minDist
-                if (lineRenderers[i] != null)
-                {
-                    Destroy(lineRenderers[i].gameObject);
-                    lineRenderers[i] = null;
-                }
+                HandleInactiveLineRenderer(i);
             }
         }
     }
 
-    // Método para crear un nuevo LineRenderer
+    // Handle active LineRenderer
+    private void HandleActiveLineRenderer(int index, Vector3 start, Vector3 end)
+    {
+        if (lineRenderers[index] == null)
+        {
+            lineRenderers[index] = CreateLineRenderer();
+        }
+
+        lineRenderers[index].SetPosition(0, start);
+        lineRenderers[index].SetPosition(1, end);
+    }
+
+    // Handle inactive LineRenderer
+    private void HandleInactiveLineRenderer(int index)
+    {
+        if (lineRenderers[index] != null)
+        {
+            Destroy(lineRenderers[index].gameObject);
+            lineRenderers[index] = null;
+        }
+    }
+
+    // Create a new LineRenderer
     private LineRenderer CreateLineRenderer()
     {
         GameObject lineObject = new GameObject("LineRenderer");
@@ -74,30 +93,37 @@ public class Iron : MonoBehaviour
         return lineRenderer;
     }
 
-    // Método para activar o desactivar el comportamiento de Iron
+    // Burn method
+    public void Burn()
+    {
+        // Calcula la dirección desde la cámara hacia el objeto apuntado
+        Vector3 direction = mainCamera.transform.forward;
+
+        // Aplica un impulso en la dirección calculada (ajusta la fuerza según sea necesario)
+        GetComponent<Rigidbody>().AddForce(direction * 10f, ForceMode.Impulse);
+
+        Debug.Log("Estoy quemando hierro");
+    }
+
+    // Activate or deactivate Iron behavior
     public void SetActive(bool active)
     {
         isActive = active;
 
-        // Si isActive es falso, desactiva o destruye todos los LineRenderers activos.
         if (!isActive)
         {
             DisableAllLines();
         }
     }
 
-    // Método para desactivar todos los LineRenderers
+    // Deactivate all LineRenderers
     private void DisableAllLines()
     {
         if (lineRenderers == null) return;
 
         for (int i = 0; i < lineRenderers.Length; i++)
         {
-            if (lineRenderers[i] != null)
-            {
-                Destroy(lineRenderers[i].gameObject);
-                lineRenderers[i] = null;
-            }
+            HandleInactiveLineRenderer(i);
         }
     }
 }

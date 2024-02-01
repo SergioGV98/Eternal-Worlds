@@ -118,7 +118,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Iron",
+                    "name": "Burn",
                     "type": "Button",
                     "id": "73d37e47-4db1-4c5a-a736-13e6de719f7f",
                     "expectedControlType": "Button",
@@ -155,7 +155,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Iron",
+                    "action": "Burn",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
